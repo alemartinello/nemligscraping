@@ -13,8 +13,6 @@ with open('nemlig_scraping.csv', 'w', newline='\n') as csvfile:
 binary = FirefoxBinary(r'C:/Program Files/Mozilla Firefox/firefox.exe') # CHANGE 
 
 run_every = 30 # Set every how many minutes to run
-with open('nemlig_scraping.csv','w') as f:
-    f.write('time, number_waiting, estimated_time \n')
 
 
 def collect_info():
@@ -46,7 +44,12 @@ if __name__ == "__main__":
     starttime=time.time()
     while True:
         print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ': Scraping website...')
-        now, number_ahead, estimated_wait_time = collect_info()
+        try:
+            now, number_ahead, estimated_wait_time = collect_info()
+        except:
+            print('Something went wrong...')
+            now, number_ahead, estimated_wait_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), None, None
+
         with open('nemlig_scraping.csv', mode='a', newline='\n') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow([now, number_ahead, estimated_wait_time])
