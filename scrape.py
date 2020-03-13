@@ -43,8 +43,13 @@ def collect_info():
     return now, number_ahead, estimated_wait_time
 
 if __name__ == "__main__":
-    now, number_ahead, estimated_wait_time = collect_info()
+    starttime=time.time()
+    while True:
+        print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ': Scraping website...')
+        now, number_ahead, estimated_wait_time = collect_info()
+        with open('nemlig_scraping.csv', mode='a', newline='\n') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow([now, number_ahead, estimated_wait_time])
+        print(f'Waiting {run_every} minutes...')    
+        time.sleep((60.0*run_every) - ((time.time() - starttime) % (60.0*run_every)))
 
-    with open('nemlig_scraping.csv', mode='a', newline='\n') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([now, number_ahead, estimated_wait_time])
