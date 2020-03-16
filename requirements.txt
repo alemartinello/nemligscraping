@@ -1,1 +1,7 @@
 selenium
+csv
+pandas
+datetime
+time
+matplotlib 
+seaborn
