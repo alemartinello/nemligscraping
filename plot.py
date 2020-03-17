@@ -28,17 +28,16 @@ def define_NB_colors():
     colorlist = [i['color'] for i in c.__dict__['_left']]
     return colorlist
 
-
-if __name__ == "__main__":
+def plot_figure():
     nb_colors = define_NB_colors()
-
+    
     df = pd.read_csv('nemlig_scraping.csv')
-    df['number_waiting'] = df['number_waiting'].fillna(0)
+    df['number_waiting'] = df['number_waiting'] #.fillna(0)
     df.time = (pd.to_datetime(df['time']))
 
-    fig, ax = plt.subplots(1,1, figsize=(15,6))
+    _, ax = plt.subplots(1,1, figsize=(15,6))
 
-    hours = mdates.HourLocator(interval = 3)
+    hours = mdates.HourLocator(interval = 4)
     hours_all = mdates.HourLocator(interval = 1)
     fmt = mdates.DateFormatter('%d/%m %H:%M')
 
@@ -47,11 +46,23 @@ if __name__ == "__main__":
     ax.xaxis.set_major_formatter(fmt)
     ax.xaxis.set_minor_locator(hours_all)
 
-    ax.set_ylabel("Online queue on nemlig.com")
+    ax.set_ylabel("Online kø på nemlig.com")
     ax.set_xlabel("")
 
     plt.axvspan(pd.to_datetime('2020-03-13 19:00:00'), pd.to_datetime('2020-03-13 19:38:00'), color=nb_colors[1], alpha=0.5, lw=0)
-    plt.annotate('Pressemøde i  \n Statsministeriet  ', (pd.to_datetime('2020-03-13 19:00:00'), 9000), ha = 'right', color=nb_colors[1])
+    plt.annotate('  Pressemøde i\n  Statsministeriet\n  (grænselukning)', (pd.to_datetime('2020-03-13 19:40:00'), 15000), ha = 'left', color=nb_colors[1])
+
+    plt.axvspan(pd.to_datetime('2020-03-17 13:30:00'), pd.to_datetime('2020-03-17 13:35:00'), color=nb_colors[1], alpha=0.5, lw=0)
+    plt.annotate('Dronningens tale  \nbekendtgjorde  ', (pd.to_datetime('2020-03-17 13:35:00'), 15000), ha = 'right', color=nb_colors[1])
+
+    plt.axvspan(pd.to_datetime('2020-03-17 19:00:00'), pd.to_datetime('2020-03-17 19:30:00'), color=nb_colors[1], alpha=0.5, lw=0)
+    plt.annotate('Pressemøde i  \nStatsministeriet  \n ("køb online hvis i kan")', (pd.to_datetime('2020-03-17 19:00:00'), 45000), ha = 'right', color=nb_colors[1])
+
+    plt.axvspan(pd.to_datetime('2020-03-17 20:00:00'), pd.to_datetime('2020-03-17 20:10:00'), color=nb_colors[1], alpha=0.5, lw=0)
+    plt.annotate('  Dronningens tale', (pd.to_datetime('2020-03-17 20:00:00'), 5000), ha = 'left', color=nb_colors[1])
+
     plt.gcf().autofmt_xdate()
 
     plt.savefig('plot.pdf')
+    return
+
